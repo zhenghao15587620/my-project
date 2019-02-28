@@ -14,7 +14,7 @@ use think\Request;
 
 class Article extends Base
 {
-    //文章的首页
+    //这个是文章得首页
     public function articleList()
     {
         $this->view->assign('title', '文章列表');
