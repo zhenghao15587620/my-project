@@ -1,0 +1,122 @@
+{extend name='public/base'/}
+{block name='header'}{/block} {//关掉头部}
+{block name='menu'}{/block} {//关掉菜单}
+{block name='seo'}
+<title>{$title|default="标题"}</title>
+<meta name="keywords" content="{$keywords|default='关键字'}">
+<meta name="description" content="{$desc|default='描述'}">
+{/block}
+
+{block name='content'}
+<article class="cl pd-20">
+
+
+	<form action="" method="post" class="form form-horizontal" id="form-grade-edit">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>班级：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+
+				<input  type="text" class="input-text" value="{$grade_info.name}" placeholder="" id="name" name="name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学制：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" autocomplete="off" value="{$grade_info.length}"  placeholder="学制" id="length" name="length">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学费：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="学费" name="price" id="price" value="{$grade_info.price}">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>授课教师：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text disabled readonly "  readonly placeholder="授课教师" name="teacher" id="teacher" value="{$grade_info.teacher}" >
+			</div>
+		</div>
+
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">启用状态：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="status" size="1">
+					{eq name='$grade_info.status' value="1"}
+					<option value="1" selected>启用</option>
+					<option value="0" >不启用</option>
+					{else /}
+					<option value="1" >启用</option>
+					<option value="0" selected>不启用</option>
+					{/eq}
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+		<!--将当前记录的id做为隐藏域发送到服务器-->
+		<input type="hidden" value="{$grade_info.id}" name="id">
+
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id="submit" >
+			</div>
+		</div>
+	</form>
+
+
+</article>
+{/block}
+
+{block name='js'}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+
+
+
+<script>
+
+	$(function(){
+		//当用户修改了输入框内容时才触发
+	    $("form").children().change(function(){
+	        $("#submit").removeClass('disabled');
+		});
+
+
+		//ajax方式提交当前表单数据
+        $("#submit").on("click", function(event){
+            $.ajax({
+				type: "POST",
+				url: "{:url('grade/doEdit')}",
+				data: $("#form-grade-edit").serialize(),
+				dataType: "json",
+				success: function(data){
+				    if (data.status == 1) {
+						alert(data.message);
+
+					} else {
+                        alert(data.message);
+
+					}
+				}
+			});
+
+		})
+
+
+
+	})
+</script>
+{/block}
+
+</body>
+</html>

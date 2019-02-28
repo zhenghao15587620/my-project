@@ -1,0 +1,163 @@
+{extend name='public/base'/}
+{block name='header'}{/block} {//关掉头部}
+{block name='menu'}{/block} {//关掉菜单}
+{block name='seo'}
+<title>{$title|default="标题"}</title>
+<meta name="keywords" content="{$keywords|default='关键字'}">
+<meta name="description" content="{$desc|default='描述'}">
+{/block}
+
+{block name='content'}
+<article class="cl pd-20">
+
+
+	<form action="" method="post" class="form form-horizontal" id="form-student-edit">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+
+				<input  type="text" class="input-text" value="{$student_info.name}" placeholder="" id="name" name="name">
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">性别：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="sex" size="1">
+
+					<option value="0" selected>男</option>
+					<option value="1" >女</option>
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>年龄：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="年龄" name="age" id="age" value="{$student_info.age}">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text "  placeholder="手机号码" name="mobile" id="mobile" value="{$student_info.mobile}" >
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text "  placeholder="邮箱" name="email" id="email" value="{$student_info.email}" >
+			</div>
+		</div>
+
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>入学时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text " placeholder="入学时间" name="start_time" id="start_time" value="{$student_info.start_time}" >
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">班级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="grade_id" size="1">
+					{volist name='gradeList' id='vo'}
+					<option value="{$vo.id}" selected>{$vo.name}</option>
+					{/volist}
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">启用状态：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="status" size="1">
+					<!--根据当前用户实际状态,动态显示默认值-->
+					{eq name='$student_info.status' value="1"}
+					<option value="1" selected>启用</option>
+					<option value="0" >不启用</option>
+					{else /}
+					<option value="1" >启用</option>
+					<option value="0" selected>不启用</option>
+					{/eq}
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+		<!--将当前记录的id做为隐藏域发送到服务器-->
+		<input type="hidden" value="{$student_info.id}" name="id">
+
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id="submit" >
+			</div>
+		</div>
+	</form>
+
+
+</article>
+{/block}
+
+{block name='js'}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+
+
+
+<script>
+
+	$(function(){
+		//当用户修改了输入框内容时才触发
+	    $("form").children().change(function(){
+	        $("#submit").removeClass('disabled');
+		});
+
+
+		//ajax方式提交当前表单数据
+        $("#submit").on("click", function(event){
+
+            $.ajax({
+				type: "POST",
+				url: "{:url('student/doEdit')}",
+				data: $("#form-student-edit").serialize(),
+				dataType: "json",
+				success: function(data){
+				    if (data.status == 1) {
+						alert(data.message);
+
+					} else {
+                        alert(data.message);
+
+					}
+				}
+			});
+
+		})
+
+
+
+	})
+</script>
+{/block}
+
+</body>
+</html>
